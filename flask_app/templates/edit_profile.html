@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+  <title>Edit Profile</title>
+</head>
+
+<body>
+  <!-- NAVIGATION BAR -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <a class="navbar-brand" href="/homepage">PinkSpace</a>
+      <a class="nav-link" href="/friends/{{session.user_id}}">Following</a>
+      <a class="nav-link" href="/chat">Chat</a>
+      <a class="nav-link" href="/user/{{session.user_id}}">My Profile</a>
+    </div>
+    <div>
+      <a class="logout_button1 nav-link" href="/logout">Log Out</a>
+    </div>
+  </div>
+  <!-- MAIN PROFILE CONTENT -->
+  <!-- Error Message -->
+  <div class="error">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == "update"%}
+    <p>{{message}}</p>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </div>
+  <form action="/user/update/{{session.user_id}}" method="post" class="col-6 mx-auto" enctype="multipart/form-data">
+    <div class="sizeedit">
+      <h2 class="text-center display-1 header mt-5 mb-3">Edit Profile</h2>
+        <div class="sizeshow white">
+            <input type="hidden" name="id" value={{user.id}}>
+            <div class="form-group">
+                <label for="filename">Profile Photo:</label>
+                <input type="file" name="file" />
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" name="first_name"  class="form-control bluetext" value="{{user.first_name}}">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" name="last_name"  class="form-control bluetext" value="{{user.last_name}}">
+            </div>
+            <div>
+              <input type="submit" value="Update Profile" class="btn">
+              <a href="/user/{{session.user_id}}" class="btn">Cancel</a>
+            </div>
+        </div>
+    </div>
+    <a href="/user/delete/{{session.user_id}}" class="btn">Delete Profile</a>
+</form>
+</body>
+
+</html>

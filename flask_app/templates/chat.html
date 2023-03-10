@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+	<title>Chat</title>
+</head>
+
+<body>
+	<div class="navbar">
+		<div class="navbar-left">
+			<a class="navbar-brand" href="/homepage">PinkSpace</a>
+			<a class="nav-link" href="/friends/{{session.user_id}}">Following</a>
+			<a class="nav-link" href="/user/{{session.user_id}}">My Profile</a>
+		</div>
+		<div>
+			<a class="logout_button1 nav-link" href="/logout">Log Out</a>
+		</div>
+	</div>
+	<div>
+		<div class="message_holder">
+			<h3 style='color: pink;font-size: 30px;'>No messages yet...</h3>
+		</div>
+
+		<form class="messages" action="" method="POST">
+			<input type="hidden" class="username" value="{{session.first_name}} {{session.last_name}}" />
+			<input type="text" class="message chatinput" placeholder="New Message" />
+			<input class="mainbuttons btn" type="submit" value="Send" />
+		</form>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
+	<script type="text/javascript">
+		var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+		socket.on('connect', function () {
+			socket.emit('my event', {
+				data: 'User Connected'
+			})
+
+			var form = $('form').on('submit', function (e) {
+				e.preventDefault()
+				let user_name = $('input.username').val()
+				let user_input = $('input.message').val()
+				socket.emit('my event', {
+					user_name: user_name,
+					message: user_input
+				})
+				$('input.message').val('').focus()
+			})
+		})
+		socket.on('my response', function (msg) {
+			console.log(msg)
+			if (typeof msg.user_name !== 'undefined') {
+				$('h3').remove()
+				$('div.message_holder').append(
+					'<div><b style="color: palevioletred">'
+					+ msg.user_name + '</b> ' + msg.message + '</div>')
+			}
+		})
+	</script>
+
+</body>
+
+</html>

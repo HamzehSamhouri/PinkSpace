@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- FRIENDS CSS -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    <title>Following</title>
+  <style>
+    .followflex {
+      margin-left: 100px;
+      margin-top: 100px;
+      display: flex;
+      gap: 200px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <a class="navbar-brand" href="/homepage">PinkSpace</a>
+      <a class="nav-link" href="/user/{{session.user_id}}">My Profile</a>
+      <a class="nav-link" href="/chat">Chat</a>
+    </div>
+    <div>
+      <a class="logout_button1 nav-link" href="/logout">Log Out</a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <!-- CREATE FRIEND FORM -->
+  <div class="main">
+    <form action="/friendship/create" method="post" class="newfollow">
+      <input type="hidden" name="user_id" value="{{session.user_id}}">
+      <select name="friend_id">
+        {% for user in users %}
+        {% if user.id != session.user_id %}
+        <option value={{user.id}}>{{user.first_name}} {{user.last_name}}</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+      <input type="submit" value="Follow" class="btn mainbuttons">
+    </form>
+    <!-- LIST OF FOLLOWING -->
+    <h3>Following</h3>
+    <div class="followflex">
+      {% for friend in friends %}
+      {% if friend.first_name %}
+      <div class="card friendcard" style="width: 18rem;">
+        <img class="card-img-top" src="/static/img/{{friend.filename}}" alt="{{friend.first_name}} {{friend.last_name}} Profile Picture">
+        <div class="card-body">
+          <h5 class="card-title">{{friend.first_name}} {{friend.last_name}}</h5>
+          <a href="/user/{{friend.id}}" class="btn">Profile</a>
+          <a href="/friendship/delete/{{friend.friendship_id}}/{{session.user_id}}" class="btn">Unfollow</a>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+</body>
+
+</html>

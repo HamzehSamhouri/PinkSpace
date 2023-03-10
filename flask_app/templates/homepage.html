@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+  <title>Homepage</title>
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="navbar-left">
+      <a class="navbar-brand" href="/homepage">PinkSpace</a>
+      <a class="nav-link" href="/friends/{{session.user_id}}">Following</a>
+      <!-- <a class="nav-link" href="/chat/{{session.user_id}}">Chat</a> -->
+      <a class="nav-link" href="/chat">Chat</a>
+      <a class="nav-link" href="/user/{{session.user_id}}">My Profile</a>
+    </div>
+    <div>
+      <a class="logout_button1 nav-link" href="/logout">Log Out</a>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="error">
+      {% with messages = get_flashed_messages() %} <!-- declare a variable called messages -->
+      {% if messages %} <!-- check if there are any messages -->
+      {% for message in messages %} <!-- loop through the messages -->
+      <p>{{message}}</p> <!-- display each message in a paragraph tag -->
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    </div>
+    <form action="/post/create" method="post" class="newpost">
+      <input type="hidden" name="user_id" value="{{session.user_id}}">
+      <label for="content">New Post</label>
+      <input type="text" class="form-control" id="content" name="content">
+      <button type="submit" class="btn mainbuttons">Post</button>
+      <a class="btn mainbuttons" href="/homepage">Cancel</a>
+    </form>
+
+    <!-- POSTS -->
+    {% for post in posts %}
+    <div class="card">
+      <div class="flex1">
+        <h5 class="poster"><a class="posterprofile" href="/user/{{post.user_id}}">
+          <img class="profilepicicon" src="/static/img/{{post.filename}}" alt="{{post.first_name}} {{post.last_name}} Icon Picture">
+          {{post.first_name}} {{post.last_name}}</a></h5>
+        <div class="dropdown">
+          <button class="dropbtn">•••</button>
+          <div class="dropdown-content">
+            <a href="/user/{{post.user_id}}">View Profile</a>
+            {% if post.user_id == session.user_id %}
+            <a href="/post/delete/{{post.id}}">Delete Post</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="card-body d-flex align-items-center justify-content-between">
+        <h5 class="card-title">{{post.content}}</h5>
+        <p>{{post.created_at.strftime('%A %B %d, %G')}}</p>
+      </div>
+        {% for comment in post.comments %}
+        <div class="card-footer text-muted flex"> 
+          <div class="flex-d justify-content-start">
+            <a class="darkpink" href="/user/{{comment.user_id}}">{{comment.first_name}} {{comment.last_name}}</a>
+            {{comment.content}}
+          </div>
+          <div class="d-flex justify-content-end gap-3">
+            {{comment.created_at.strftime('%A %B %d, %G')}}
+            {% if comment.user_id == session.user_id %}
+            <a style="margin-left: 10px;" href="/comment/delete/{{comment.id}}">Delete</a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="card-body text-muted">
+          <form action="/comment/create" method="post" class="newpost">
+            <label for="content">New Comment</label>
+            <input type="hidden" name="user_id" value="{{session.user_id}}">
+            <input type="hidden" name="post_id" value="{{post.id}}">
+            <div>
+              <input type="text" class="form-control" id="content" name="content">
+            </div>
+            <button type="submit" class="btn mainbuttons">Comment</button>
+            <a class="btn mainbuttons" href="/homepage">Cancel</a>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+</body>
+</html>
