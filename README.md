@@ -1,4 +1,5 @@
-# PinkSpace - a simple social media application
+![](./site_images/PinkSpace-header-image.png)
+
 <!-- > Live demo [_here_](https://www.example.com). -->
 
 ## Table of Contents
