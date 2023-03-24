@@ -21,15 +21,16 @@ PinkSpace allows users to catch up with their friends without the toxic performa
 <br>
 
 
+
+
 ## Technologies Used
-- Python - version 3.11.1
-- Flask - version 2.2.2
-- MySQL - version 8.0.22 for macos10.15 on x86_64
-- Python-socketio - version 5.7.2
-- Flask-socketio - version 5.2.2
-- Flask-bcrypt - version 1.0.1
-- Bcrypt - version 4.0.1
-- Pymysql - version 1.0.2
+* [Python](https://www.python.org/)
+* [Flask](https://flask.palletsprojects.com/en/2.2.x/)
+* [MySQL](https://www.mysql.com/)
+* [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/)
+* [Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/en/1.0.1/)
+* [Bootstrap](https://getbootstrap.com/)
+
 
 <br>
 
